@@ -101,7 +101,11 @@ function actualizarLista(){
 }
 
 function eliminarParticipante(index){
+    const participantes= JSON.parse(localStorage.getItem("participantes")) || [];
+
     participantes.splice(index,1);
+    
+    localStorage.setItem("participantes",JSON.stringify(participantes));
     actualizarLista();
 }
 
@@ -111,6 +115,8 @@ function cargarSelects(){
 
     selectBase.innerHTML="";
     selectRestringida.innerHTML="";
+
+    const participantes= JSON.parse(localStorage.getItem("participantes")) || [];
 
     participantes.forEach(nombre=>{
         selectBase.innerHTML+=`
