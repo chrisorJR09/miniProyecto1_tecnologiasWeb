@@ -25,8 +25,8 @@ btnAgregarRestricciones.addEventListener("click", agregarRestricciones);
 
 
 //iniciamos el sorteo
-const btnComenzarSorteo=document.getElementById("btnIniciarSorteo");
-btnComenzarSorteo.addEventListener("click", comenzarSorteo);
+// const btnComenzarSorteo=document.getElementById("btnIniciarSorteo");
+// btnComenzarSorteo.addEventListener("click", comenzarSorteo);
 
 
 //función para agregar al creador del sorteo
@@ -63,8 +63,6 @@ function agregarCreador(){
 
 
 
-
-
 function agregarParticipante(){
     //traemos los datos del modal y quitamos espacios en blanco
     const input = document.getElementById("inputParticipante");
@@ -93,6 +91,8 @@ function agregarParticipante(){
 
 }
 
+
+
 function actualizarLista(){
     //traemos la lista del modal
     const lista= document.getElementById("listaParticipantes");
@@ -116,6 +116,7 @@ function actualizarLista(){
 }
 
 
+
 function eliminarParticipante(index){
     const participantes= JSON.parse(localStorage.getItem("participantes")) || [];
 
@@ -124,6 +125,8 @@ function eliminarParticipante(index){
     localStorage.setItem("participantes",JSON.stringify(participantes));
     actualizarLista();
 }
+
+
 
 function cargarSelects(){
     const selectBase= document.getElementById("personaBase");
@@ -143,6 +146,8 @@ function cargarSelects(){
         `;
     })
 }
+
+
 
 function agregarRestricciones(){
     const base = document.getElementById("personaBase").value;
@@ -165,6 +170,8 @@ function agregarRestricciones(){
 
     mostrarRestricciones();
 }
+
+
 
 function mostrarRestricciones(){
     const lista=document.getElementById("listaRestricciones");
@@ -213,6 +220,8 @@ function esValido(asignaciones){
     return true;
 }
 
+
+
 //función que contiene la logica del sorteo
 function sorteo(){
     let intentos= 0;
@@ -256,6 +265,8 @@ function sorteo(){
 
 }
 
+
+
 function comenzarSorteo(){
     const resultado=sorteo();
 
@@ -263,6 +274,8 @@ function comenzarSorteo(){
         mostrarResultado(resultado);
     }
 }
+
+
 
 function mostrarResultado(asignaciones){
     const lista=document.getElementById("listaResultado");
@@ -279,6 +292,7 @@ function mostrarResultado(asignaciones){
 }
 
 
+
 function obtenerParticipantes(){
     const arrayParticipantes=localStorage.getItem("participantes");
     if(!arrayParticipantes){
@@ -289,6 +303,8 @@ function obtenerParticipantes(){
     return participantes;
 }
 
+
+
 function obtenerRestricciones(){
     const arrayRestricciones=localStorage.getItem("restricciones");
     if(!arrayRestricciones){
@@ -297,4 +313,219 @@ function obtenerRestricciones(){
 
     const restricciones=JSON.parse(arrayRestricciones);
     return restricciones;
+}
+
+
+
+// Lógica para el nuevo modal de configuración
+let motivoSeleccionado = "";
+
+function setMotivo(valor) {
+    motivoSeleccionado = valor;
+    // Ponemos el valor en el input oculto por si acaso
+    document.getElementById('customMotivo').value = valor;
+    
+    // Feedback visual: quitamos la clase 'active' de todos y se la ponemos al clicado
+    document.querySelectorAll('.btn-motivo').forEach(btn => {
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-outline-secondary');
+    });
+    
+    // El botón que llamamos (evento actual) le cambiamos el color
+    event.target.classList.remove('btn-outline-secondary');
+    event.target.classList.add('btn-primary');
+}
+
+
+
+function checkPresupuesto(valor) {
+    const inputCustom = document.getElementById('customPresupuesto');
+    if(valor === "otro") {
+        inputCustom.classList.remove('d-none');
+    } else {
+        inputCustom.classList.add('d-none');
+    }
+}
+
+
+
+document.getElementById('btnGuardarConfig').addEventListener('click', () => {
+    const customMot = document.getElementById('customMotivo').value;
+    const fecha = document.getElementById('fechaEvento').value;
+    const presupuestoBase = document.getElementById('presupuestoSelect').value;
+    const presupuestoFinal = presupuestoBase === "otro" ? document.getElementById('customPresupuesto').value : presupuestoBase;
+
+    if(!fecha || (!motivoSeleccionado && !customMot)) {
+        alert("Por favor rellena la fecha y el motivo.");
+        return;
+    }
+
+    const config = {
+        evento: customMot || motivoSeleccionado,
+        fecha: fecha,
+        presupuesto: presupuestoFinal
+    };
+
+    localStorage.setItem("configuracion", JSON.stringify(config));
+    
+    // Ahora sí, cerramos y disparamos el sorteo
+    const modalElement = document.getElementById('modalConfiguracion');
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    modalInstance.hide();
+    
+    comenzarSorteo(); // Tu función que ya tienes
+});
+
+
+
+// Modificacion de tu funcion mostrarResultado para activar esta seccion
+function mostrarResultado(asignaciones) {
+    const lista = document.getElementById("listaResultado");
+    lista.innerHTML = "";
+
+    for (let persona in asignaciones) {
+        lista.innerHTML += `
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>${persona} le regala a:</span>
+                <span class="badge" style="background-color: var(--color-accent);">${asignaciones[persona]}</span>
+            </li>`;
+    }
+
+    // Mostrar el contenedor de sugerencias
+    const seccion = document.getElementById("seccionSugerencias");
+    seccion.classList.remove("d-none");
+    
+    // Inicializar los eventos de arrastre
+    prepararDragAndDrop();
+}
+
+
+
+function prepararDragAndDrop() {
+    const items = document.querySelectorAll(".item-regalo");
+    const destino = document.getElementById("cajaDestino");
+    const placeholder = document.getElementById("placeholderTexto");
+
+    items.forEach(item => {
+        item.addEventListener("dragstart", (e) => {
+            e.dataTransfer.setData("text", e.target.id);
+            e.target.style.opacity = "0.5";
+        });
+
+        item.addEventListener("dragend", (e) => {
+            e.target.style.opacity = "1";
+        });
+    });
+
+    destino.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        destino.style.boxShadow = "inset 0 0 10px var(--color-secundario)";
+    });
+
+    destino.addEventListener("dragleave", () => {
+        destino.style.boxShadow = "none";
+    });
+
+    destino.addEventListener("drop", (e) => {
+        e.preventDefault();
+        destino.style.boxShadow = "none";
+        
+        const idRegalo = e.dataTransfer.getData("text");
+        const elemento = document.getElementById(idRegalo);
+        
+        if (placeholder) {
+            placeholder.style.display = "none";
+        }
+
+        // Mover el elemento y cambiar su color al del acento (naranja)
+        destino.appendChild(elemento);
+        elemento.style.backgroundColor = "var(--color-accent)";
+    });
+}
+
+
+
+function guardarSugerencias() {
+    const seleccionados = [];
+    const itemsEnDestino = document.querySelectorAll("#cajaDestino .item-regalo");
+    
+    itemsEnDestino.forEach(item => {
+        seleccionados.push(item.innerText);
+    });
+    
+    if (seleccionados.length === 0) {
+        alert("Selecciona al menos una sugerencia de regalo");
+        return;
+    }
+
+    // Persistencia en LocalStorage segun requerimiento
+    localStorage.setItem("sugerenciasRegalos", JSON.stringify(seleccionados));
+    alert("Lista de sugerencias guardada correctamente");
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    configurarBotonPrincipal();
+});
+
+function configurarBotonPrincipal() {
+    const btn = document.getElementById("btnAccionPrincipal");
+    const config = localStorage.getItem("configuracion");
+    const imagenDefault = document.getElementById("imagenDefault");
+    const cardResumen = document.getElementById("cardResumenEvento");
+
+    if (config) {
+        // --- ESCENARIO A: YA HAY DATOS (BOTÓN PARA REINICIAR) ---
+        btn.innerText = "NUEVO SORTEO";
+        btn.style.backgroundColor = "var(--color-accent)";
+        btn.style.border = "none";
+        
+        // Desactivamos el modal de Bootstrap para que no se abra al querer borrar
+        btn.removeAttribute("data-bs-toggle");
+        btn.removeAttribute("data-bs-target");
+
+        // Mostramos el resumen
+        if(imagenDefault) imagenDefault.classList.add("d-none");
+        if(cardResumen) {
+            cardResumen.classList.remove("d-none");
+            const datos = JSON.parse(config);
+            llenarCardResumen(datos);
+        }
+
+        // Programar la limpieza física
+        btn.onclick = function(e) {
+            e.preventDefault(); // Evita cualquier comportamiento por defecto
+            if (confirm("¿Quieres borrar todo y empezar de cero?")) {
+                localStorage.clear();
+                window.location.reload(); // Recarga total
+            }
+        };
+
+    } else {
+        // --- ESCENARIO B: NO HAY DATOS (EMPEZAR DE CERO) ---
+        btn.innerText = "EMPEZAR AHORA";
+        btn.style.backgroundColor = "var(--color-primario)";
+        btn.style.border = "none";
+        
+        // IMPORTANTE: Limpiar el evento click manual para que Bootstrap tome el control
+        btn.onclick = null; 
+
+        // Activamos los atributos de Bootstrap para abrir el modal
+        btn.setAttribute("data-bs-toggle", "modal");
+        btn.setAttribute("data-bs-target", "#exampleModal");
+        
+        if(cardResumen) cardResumen.classList.add("d-none");
+        if(imagenDefault) imagenDefault.classList.remove("d-none");
+    }
+}
+
+function llenarCardResumen(datos) {
+    // Usamos validacion opcional (?.) por si los elementos no existen en el DOM todavia
+    const titulo = document.getElementById("resumenTitulo");
+    const fecha = document.getElementById("resumenFecha");
+    const presupuesto = document.getElementById("resumenPresupuesto");
+
+    if(titulo) titulo.innerText = datos.evento || "Evento";
+    if(fecha) fecha.innerText = datos.fecha || "Sin fecha";
+    if(presupuesto) presupuesto.innerText = datos.presupuesto || "0";
 }

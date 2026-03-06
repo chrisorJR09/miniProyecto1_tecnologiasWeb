@@ -1,0 +1,88 @@
+:root {
+    --color-primario: #0B4A75;   /* Azul Oscuro */
+    --color-secundario: #60B7D1;  /* Azul Claro */
+    --color-accent: #E95228;     /* Naranja Vibrante */
+    --color-bg: #E3E3E3;         /* Gris Fondo */
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background-color: var(--color-bg);
+}
+
+.navbar, .font-bungee {
+    font-family: 'Bungee', cursive;
+    background-color: var(--color-primario) !important;
+}
+
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-primario);
+}
+
+h1, h2, h3, .navbar-brand {
+    font-family: 'Bungee', cursive;
+}
+
+/* Navbar estilo Gaming */
+.navbar {
+    background-color: var(--color-primario) !important;
+    border-bottom: 5px solid var(--color-accent);
+}
+
+/* Botones estilo "Push" de juego */
+.btn-primary {
+    background-color: var(--color-accent) !important;
+    border: none;
+    border-bottom: 5px solid #b33a1a;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(2px);
+    border-bottom: 2px solid #b33a1a;
+}
+
+/* Cards y Modales con bordes redondeados tipo caricatura */
+.card, .modal-content {
+    border: 3px solid var(--color-primario);
+    border-radius: 20px;
+    box-shadow: 10px 10px 0px var(--color-secundario);
+}
+
+.modal-header {
+    background-color: var(--color-secundario);
+    color: white;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+/* Inputs llamativos */
+input, select {
+    border: 2px solid var(--color-secundario) !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+}
+
+.hero-section {
+    padding: 60px 0;
+}
+
+.list-group-item {
+    border-left: 5px solid var(--color-accent);
+    margin-bottom: 5px;
+    border-radius: 10px !important;
+    font-weight: bold;
+}
+
+.border-dashed {
+    border-style: dashed !important;
+}
+
+#dropZone:hover {
+    transform: scale(1.05);
+    border-color: var(--color-accent) !important;
+}

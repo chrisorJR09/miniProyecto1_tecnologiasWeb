@@ -3,153 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorteos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="app.js" defer></script>
+    <title>Sorteos Master</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body  class="bg-secondary-subtle">
+<body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg bg-dark navbar-dark shadow">
+
+    <nav class="navbar navbar-expand-lg navbar-dark shadow mb-5">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">Inicio</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <a class="navbar-brand fs-3" href="#">🎲 SORTEO MASTER</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="aboutUs.html">Sobre Nosotros</a>
+                        <a class="nav-link active fw-bold" href="#">SOBRE NOSOTROS</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Contenido principal -->
-    <div class="container text-center">
-        <div class="row">
-            <!-- columna 1 con texto y botón -->
+    <div class="container hero-section">
+        <div class="row align-items-center">
             <div class="col-md-6 text-start">
-                    <div>
-                        <h2 class="mb-3">Genera tu sorteo de manera sencilla!</h2>
-                    </div>
-                    <div>
-                        <p class="mb-4">
-                            Crea sorteos personalizados para cada ocasión, agrega los participantes
-                            que sean necesarios y selecciona un ganador o genera un intercambio de 
-                            manera rapida, sin complicaciones.
-                        </p>
-                    </div>
-                    <!-- Boton para agregar toda la informacion del sorteo -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        ¡Ingresar información!
+                <h2 class="display-4 mb-3 text-uppercase" style="color: var(--color-primario);">Genera tu sorteo <span style="color: var(--color-accent);">PRO</span></h2>
+                <p class="lead mb-4 fw-bold text-muted">
+                    Crea sorteos epicos para tus amigos. Agrega participantes, evita que ciertas personas se saquen entre si y descubre al ganador con un solo clic.
+                </p>
+                <div id="contenedorBotonPrincipal">
+                    <button type="button" id="btnAccionPrincipal" class="btn btn-primary btn-lg px-5 py-3 shadow mb-3">
+                        EMPEZAR AHORA
                     </button>
+                </div>
             </div>    
-            <!-- columna 2 con card e imagen -->
-            <div class="col-md-6 d-flex justify-content-center">
-                <div class="card" style="width: 18rem;">
-                    <img src="src/img1.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <p class="card-text">¿Qué esperas para generar tu sorteo?</p>
+            
+            <div class="col-md-6 d-flex justify-content-center mt-5 mt-md-0">
+                <div id="imagenDefault" class="card overflow-hidden" style="width: 22rem;">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-sorteo-diseno-plano_23-2148612152.jpg" class="card-img-top" alt="Sorteo">
+                    <div class="card-body bg-white text-center">
+                        <p class="card-text fw-bold fs-5">¿Listo para la suerte?</p>
+                    </div>
+                </div>
+
+                <div id="cardResumenEvento" class="card overflow-hidden d-none" style="width: 22rem;">
+                    <div class="card-header text-white text-center" style="background-color: var(--color-primario);">
+                        <h5 class="mb-0">EVENTO GUARDADO</h5>
+                    </div>
+                    <div class="card-body bg-white text-center">
+                        <h3 id="resumenTitulo" class="text-uppercase" style="color: var(--color-accent);"></h3>
+                        <p class="mb-1"><strong>FECHA:</strong> <span id="resumenFecha"></span></p>
+                        <p class="mb-3"><strong>MONTO:</strong> $<span id="resumenPresupuesto"></span></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-   
-
-    <!-- Modal para agregar la informacion de quien está creando el modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Creador del sorteo</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-            <div class="modal-body">
-                <p>¿Cual es tu nombre?</p>
-                <input id="inputCreador" placeholder="Inserta tu nombre">
-                <br>
-                <input id="creadorParticipa" type="checkbox">Incluirme como participante 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" 
-                    data-bs-target="#exampleModal2"
-                    data-bs-toggle="modal"
-                    data-bs-dismiss="modal"
-                    id="btnAgregarCreador">Siguiente</button>
-            </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para agregar participantes -->
-    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Participantes</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-            <div class="modal-body">
-                <p>Añade a los participantes</p>
-                <input placeholder="Participante..." id="inputParticipante">
-                <button id="btnAgregarParticipante">Agregar</button> 
-
-                <ul id="listaParticipantes" class="list-group"></ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary"
-                    data-bs-target="#exampleModal3"
-                    data-bs-toggle="modal"
-                    data-bs-dismiss="modal">Siguiente</button>
-            </div>
-            </div>
-        </div>        
-    </div>
-
-    <!-- Modal para excluir sorteados -->
-    <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">¿Deseas excluir a alguien?</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-            <div class="modal-body">
-                <label>¿Quién tiene restricción?</label>
-                <select id="personaBase" class="form-select mb-3"></select>
-
-                <label>¿A quién no puede sacar?</label>
-                <select id="personaRestringida" class="form-select mb-3"></select>
-
-                <button id="btnAgregarRestriccion" class="btn btn-danger">
-                    Agregar restricción
-                </button>
-                <hr>
-                <ul id="listaRestricciones" class="list-group mt-3"></ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnIniciarSorteo">Generar Sorteo</button>
-            </div>
-            </div>
-        </div>
-        
-    </div>
-
-    <!-- Contenedor con el resultado del sorteo -->
     <div class="container mt-5">
-        <h3>Resultado del sorteo</h3>
-        <ul id="listaResultado" class="list-group"></ul>
+        <div class="row justify-content-center">
+            <div class="col-md-8 bg-white p-4 rounded-4 shadow-sm border border-3 border-info">
+                <h3 class="text-center mb-4"><span class="badge bg-warning text-dark">🏆 RESULTADOS</span></h3>
+                <ul id="listaResultado" class="list-group list-group-flush">
+                    </ul>
+            </div>
+        </div>
     </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    
+    <div class="modal fade" id="exampleModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">👤 ¿QUIÉN ERES?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <label class="form-label fw-bold">Introduce tu nombre de organizador:</label>
+                    <input id="inputCreador" class="form-control form-control-lg mb-3" placeholder="Ej. Juan Pérez">
+                    <div class="form-check form-switch mt-3">
+                        <input class="form-check-input" type="checkbox" id="creadorParticipa">
+                        <label class="form-check-label fw-bold" for="creadorParticipa">¡Yo también quiero participar!</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-target="#exampleModal2" data-bs-toggle="modal" data-bs-dismiss="modal" id="btnAgregarCreador">SIGUIENTE ➡️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="modalConfiguracion" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h1 class="modal-title fs-5">📅 DETALLES DEL EVENTO</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="fw-bold mb-2">¿Para qué es el sorteo?</label>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button class="btn btn-outline-secondary btn-sm btn-motivo" onclick="setMotivo('Navidad')">Navidad</button>
+                        <button class="btn btn-outline-secondary btn-sm btn-motivo" onclick="setMotivo('Intercambio')">Intercambio</button>
+                        <button class="btn btn-outline-secondary btn-sm btn-motivo" onclick="setMotivo('San Valentín')">San Valentín</button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="document.getElementById('customMotivo').classList.toggle('d-none')">Mostrar más...</button>
+                    </div>
+                    <input id="customMotivo" class="form-control mb-3 d-none" placeholder="Nombre personalizado del evento">
+
+                    <label class="fw-bold mb-2">¿Cuándo se celebra?</label>
+                    <input type="date" id="fechaEvento" class="form-control mb-3">
+
+                    <label class="fw-bold mb-2">Presupuesto ($)</label>
+                    <select id="presupuestoSelect" class="form-select mb-2" onchange="checkPresupuesto(this.value)">
+                        <option value="100">$100</option>
+                        <option value="200">$200</option>
+                        <option value="300">$300</option>
+                        <option value="500">$500</option>
+                        <option value="otro">Otro...</option>
+                    </select>
+                    <input id="customPresupuesto" type="number" class="form-control d-none" placeholder="Monto personalizado">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary w-100" id="btnGuardarConfig">¡TODO LISTO, A SORTEAR! 🎲</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <div class="modal fade" id="exampleModal2" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">👥 PARTICIPANTES</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input placeholder="Nombre del jugador..." id="inputParticipante" class="form-control">
+                        <button class="btn btn-success fw-bold" id="btnAgregarParticipante">＋ AGREGAR</button>
+                    </div>
+                    <ul id="listaParticipantes" class="list-group"></ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary rounded-pill w-100" data-bs-target="#exampleModal3" data-bs-toggle="modal" data-bs-dismiss="modal">¡LISTO, SIGUIENTE! ➡️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal3" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white border-0">
+                    <h1 class="modal-title fs-5">🚫 RESTRICCIONES</h1>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="small text-muted mb-3">Evita que ciertas personas se regalen entre sí (ej. parejas).</p>
+                    <label class="fw-bold">Si esta persona:</label>
+                    <select id="personaBase" class="form-select mb-3"></select>
+
+                    <label class="fw-bold">No puede sacar a:</label>
+                    <select id="personaRestringida" class="form-select mb-3"></select>
+
+                    <button id="btnAgregarRestriccion" class="btn btn-outline-danger w-100 fw-bold border-2">
+                        ⛔ AÑADIR REGLA
+                    </button>
+                    <hr>
+                    <ul id="listaRestricciones" class="list-group mt-3"></ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-lg w-100" data-bs-target="#modalConfiguracion" data-bs-toggle="modal" data-bs-dismiss="modal">SIGUIENTE ➡️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <div id="seccionSugerencias" class="container mt-5 d-none">
+        <div class="card">
+            <div class="card-header text-center" style="background-color: var(--color-secundario); color: white;">
+                <h3 class="mb-0">PERSONALIZA TU INTERCAMBIO</h3>
+                <p class="small mb-0">Arrastra las sugerencias que te gusten al recuadro de la derecha</p>
+            </div>
+            <div class="card-body bg-white">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-center mb-3" style="color: var(--color-primario);">IDEAS DE REGALO</h5>
+                        <div id="cajaIdeas" class="p-3 border rounded-4 d-flex flex-wrap gap-2" style="min-height: 200px; background-color: var(--color-bg);">
+                            <div class="badge p-3 item-regalo" draggable="true" id="regalo1" style="background-color: var(--color-primario); cursor: move;">Termos</div>
+                            <div class="badge p-3 item-regalo" draggable="true" id="regalo2" style="background-color: var(--color-primario); cursor: move;">Chocolates</div>
+                            <div class="badge p-3 item-regalo" draggable="true" id="regalo3" style="background-color: var(--color-primario); cursor: move;">Prendas</div>
+                            <div class="badge p-3 item-regalo" draggable="true" id="regalo4" style="background-color: var(--color-primario); cursor: move;">Accesorios</div>
+                            <div class="badge p-3 item-regalo" draggable="true" id="regalo5" style="background-color: var(--color-primario); cursor: move;">Libros</div>
+                            <div class="badge p-3 item-regalo" draggable="true" id="regalo6" style="background-color: var(--color-primario); cursor: move;">Tarjetas de Regalo</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5 class="text-center mb-3" style="color: var(--color-primario);">REGALOS SELECCIONADOS</h5>
+                        <div id="cajaDestino" class="p-3 border border-3 rounded-4 text-center" 
+                            style="min-height: 200px; background-color: white; border-style: dashed !important; border-color: var(--color-secundario) !important;">
+                            <p class="text-muted mt-4" id="placeholderTexto">Suelta aqui los regalos elegidos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary btn-lg px-5" onclick="guardarSugerencias()">
+                        GUARDAR LISTA FINAL
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <footer class="text-center py-4 mt-5 border-top border-3" style="border-color: var(--color-primario) !important;">
+        <p class="fw-bold mb-0">DESARROLLADO POR:</p>
+        <p class="text-uppercase" style="color: var(--color-accent); font-family: 'Bungee';">Tu Nombre y El Nombre de tu Compañero</p>
+        <p class="small text-muted">UAA - ISC 6TO SEMESTRE - TECNOLOGÍAS WEB</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
