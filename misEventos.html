@@ -4,7 +4,29 @@
     <meta charset="UTF-8">
     <title>Mis Eventos - Sorteo Master</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
+
+ <nav class="navbar navbar-expand-lg navbar-dark shadow mb-5">
+        <div class="container-fluid">
+            <a class="navbar-brand fs-3" href="#">🎲 SORTEO MASTER</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active fw-bold" href="index.html">INICIO</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active fw-bold" href="aboutUs.html">SOBRE NOSOTROS</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
 <body class="bg-light">
     <div class="container my-5">
         <h2 class="text-center mb-4 fw-bold">TUS EVENTOS GUARDADOS</h2>
@@ -17,22 +39,31 @@
         </div>
     </div>
 
+
+     <footer class="text-center py-4 mt-5 border-top border-3" style="border-color: var(--color-primario) !important;">
+        <p class="fw-bold mb-0">DESARROLLADO POR:</p>
+        <br>
+        <p class="text-uppercase" style="color: var(--color-accent); font-family: 'Bungee';">Andrea Guadalupe Pérez Jiménez </p>
+        <p class="text-uppercase" style="color: var(--color-accent); font-family: 'Bungee';">Christopher Orlando Jauregui Rangel</p> 
+            
+        <p class="small text-muted">UAA - ISC 6TO SEMESTRE - TECNOLOGÍAS WEB</p>
+    </footer>
+
     <script>
         // Lógica rápida para leer y mostrar
         document.addEventListener("DOMContentLoaded", () => {
-            const evento = JSON.parse(localStorage.getItem("evento"));
+            const eventos = JSON.parse(localStorage.getItem("eventosHistorial")) || [];
             const contenedor = document.getElementById("contenedorEventos");
 
-            if (evento && evento.organizador) {
+            if (eventos.length > 0){
                 document.getElementById("mensajeVacio").style.display = "none";
-                
-                contenedor.innerHTML = `
-                    <div class="col-md-8">
+                contenedor.innerHTML = eventos.map(evento => `
+                    <div class="col-md-8 mb-4">
                         <div class="card border-0 shadow-sm rounded-4">
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h3 class="text-primary mb-0">🎈 ${evento.tipoEvento || 'Intercambio'}</h3>
-                                    <span class="badge bg-success">Activo</span>
+                                    <span class="badge bg-success">Guardado</span>
                                 </div>
                                 <hr>
                                 <div class="row">
@@ -62,7 +93,7 @@
                             </div>
                         </div>
                     </div>
-                `;
+                `).join('');
             }
         });
     </script>

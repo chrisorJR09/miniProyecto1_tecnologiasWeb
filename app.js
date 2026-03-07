@@ -115,11 +115,12 @@ function agregarCreador(){
     const checkbox=checkboxCreador.checked;
 
     if(!creador){
-
-        alert("Indica quien está creando el sorteo");
-
+        Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: "Debes agregar un responsable."
+        });
         return;
-
     }
 
     //traemos los datos del evento desde local storage
@@ -172,7 +173,13 @@ function agregarParticipante(){
     //mandamos un alert y retornamos
     if(participantes.includes(nombre)){
 
-        alert("Este participante ya está registrado");
+        //alert("Este participante ya está registrado");
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Este participante ya está registrado"
+        });
+
 
         return;
 
@@ -281,7 +288,12 @@ function agregarRestricciones(){
     
     if(base===restringido){
 
-        alert("No puede restringirse a si mismo");
+        //alert("No puede restringirse a si mismo");
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "No puede restringirse a si mismo"
+        });
 
         return;
 
@@ -421,7 +433,12 @@ function sorteo(){
     }
 
     //si despues de hacer todos los intentos no nos arroja alguna combinación valida, regresamos un null
-    alert("No se pudo generar un sorteo válido.");
+    //alert("No se pudo generar un sorteo válido.");
+    Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo generar un sorteo válido."
+    });
 
     return null;
 
@@ -436,6 +453,8 @@ function comenzarSorteo(){
     if(resultado){
         mostrarResultado(resultado);
         
+        guardarEventoHistorial(resultado);
+
         const seccionResultado=document.getElementById("seccionResultados");
 
         if(seccionResultado){
@@ -548,7 +567,12 @@ document.getElementById('btnGuardarConfig').addEventListener('click', () => {
     const presupuestoFinal = presupuestoBase === "otro" ? document.getElementById('customPresupuesto').value : presupuestoBase;
 
     if(!fecha || (!motivoSeleccionado && !customMot)) {
-        alert("Por favor rellena la fecha y el motivo.");
+        //alert("Por favor rellena la fecha y el motivo.");
+        Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: "Por favor rellena la fecha y el motivo."
+        });
         return;
     }
 
@@ -648,13 +672,18 @@ function guardarSugerencias() {
     });
     
     if (seleccionados.length === 0) {
-        alert("Selecciona al menos una sugerencia de regalo");
+        //alert("Selecciona al menos una sugerencia de regalo");
+        Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: "Selecciona al menos una sugerencia de regalo."
+        });
         return;
     }
 
     // Persistencia en LocalStorage segun requerimiento
     localStorage.setItem("sugerenciasRegalos", JSON.stringify(seleccionados));
-    alert("Lista de sugerencias guardada correctamente");
+    
 
     //llamamos nueamente a la función que toma el estado del localStorage actualizado
     configurarBotonPrincipal();
@@ -666,6 +695,13 @@ function guardarSugerencias() {
             behavior: "smooth"
         });
     }
+
+    alert("Lista de sugerencias guardada correctamente");
+    // Swal.fire({
+    //     icon: "success",
+    //     title: "Sorteo generado",
+    //     text: "Lista de sugerencias guardada correctamente."
+    // });
 
 }
 
@@ -699,10 +735,30 @@ function configurarBotonPrincipal() {
         // Programar la limpieza física
         btn.onclick = function(e) {
             e.preventDefault(); // Evita cualquier comportamiento por defecto
-            if (confirm("¿Quieres borrar todo y empezar de cero?")) {
-                localStorage.clear();
-                window.location.reload(); // Recarga total
+            // if (confirm("¿Quieres borrar todo y empezar de cero?")) {
+            //     localStorage.removeItem("configuracion");
+            //     localStorage.removeItem("evento");
+            //     localStorage.removeItem("sugerenciasRegalos");
+            //     window.location.reload(); // Recarga total
+            // }
+            Swal.fire({
+            title: '¿Quieres borrar todo y empezar de cero?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, borrar todo',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Borrar todo
+                localStorage.removeItem("configuracion");
+                localStorage.removeItem("evento");
+                localStorage.removeItem("sugerenciasRegalos");
+
+                // Recargar la página
+                window.location.reload();
             }
+        });
         };
 
     } else {
@@ -740,4 +796,38 @@ function llenarCardResumen(datos) {
         regalos.innerText=regalosGuardados.join(", ");
     }
 
+}
+
+function guardarEventoHistorial(resultado){
+
+    const config = JSON.parse(localStorage.getItem("configuracion"));
+    const participantes = obtenerParticipantes();
+    const ultEvento= obtenerEvento();
+
+    let eventos = JSON.parse(localStorage.getItem("eventosHistorial")) || [];
+
+    const nuevoEvento = {
+        id: Date.now(),
+        tipoEvento: config?.evento,
+        fecha: config?.fecha,
+        presupuesto: config?.presupuesto,
+        participantes: participantes,
+        resultado: resultado,
+        organizador: ultEvento.organizador
+    };
+
+    eventos.push(nuevoEvento);
+
+    localStorage.setItem("eventosHistorial", JSON.stringify(eventos));
+
+}
+
+function irAlInicio() {
+    const seccion = document.getElementById("seccionHero");
+
+    if (seccion) {
+        seccion.scrollIntoView({
+            behavior: "smooth"
+        });
+    }
 }
